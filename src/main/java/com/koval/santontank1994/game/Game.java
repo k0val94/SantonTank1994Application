@@ -1,13 +1,18 @@
-package com.koval.santontank1994;
+package com.koval.santontank1994.game;
 
-import org.springframework.boot.SpringApplication;
+import com.koval.santontank1994.entity.MapObject;
+import com.koval.santontank1994.entity.Tank;
+import com.koval.santontank1994.input.InputHandler;
 
-import org.springframework.context.ConfigurableApplicationContext;
-
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
+import javax.imageio.ImageIO;
 
 public class Game extends JFrame {
 
@@ -15,36 +20,34 @@ public class Game extends JFrame {
 
     private static final int GAME_WIDTH = 1280;
     private static final int GAME_HEIGHT = 1024;
-    private static final int GRID_SIZE = 32;
+    private static final int GRID_SIZE = 64;
     private static final int MAP_WIDTH = GAME_WIDTH / GRID_SIZE;
     private static final int MAP_HEIGHT = GAME_HEIGHT / GRID_SIZE;
 
-    private static final String MAP_FILE = "resources/maps/test.map";
+    private static final String MAP_FILE = "resources/maps/hochhaus.map";
 
-    private Tank[] tanks;
+    private List<Tank> tanks;
     private MapGenerator mapGenerator;
 
     private BufferedImage offscreenImage;
     private Graphics2D offscreenGraphics;
 
-
-
-    public void play() {
+    public Game() {
         setTitle("Santon Tank 1994");
         setSize(GAME_WIDTH, GAME_HEIGHT);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        tanks = new Tank[2];
-        tanks[0] = new Tank(64, GAME_HEIGHT - 96);
-        tanks[0].setDirection(Tank.DOWN);
-        tanks[1] = new Tank(GAME_WIDTH - 96, 64);
-        tanks[1].setDirection(Tank.LEFT);
-
         Level level = new Level(MAP_FILE);
+        mapGenerator = new MapGenerator(level.getMapData());
 
-        level.createBufferedImage(MAP_WIDTH, MAP_HEIGHT);
+        tanks = level.getTanks();
 
+        offscreenImage = new BufferedImage(GAME_WIDTH, GAME_HEIGHT, BufferedImage.TYPE_INT_ARGB);
+        offscreenGraphics = offscreenImage.createGraphics();
+    }
+
+    public void play() {
         setVisible(true);
         startGameLoop();
     }
@@ -62,7 +65,7 @@ public class Game extends JFrame {
     }
 
     private void update() {
-        // Bewegungen der Tanks aktualisieren
+        // Update movements of tanks
         for (Tank tank : tanks) {
             int vx = 0, vy = 0;
 
@@ -89,19 +92,19 @@ public class Game extends JFrame {
     }
 
     private void render() {
-        // Hintergrund zeichnen
+        // Draw background
         offscreenGraphics.setColor(Color.GRAY);
         offscreenGraphics.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
-        // Karte zeichnen
+        // Draw map
         mapGenerator.draw(offscreenGraphics);
 
-        // Tanks zeichnen
+        // Draw tanks
         for (Tank tank : tanks) {
             tank.draw(offscreenGraphics);
         }
 
-        // Offscreen-Bild auf das Fenster zeichnen
+        // Draw offscreen image on window
         getGraphics().drawImage(offscreenImage, 0, 0, null);
     }
 }

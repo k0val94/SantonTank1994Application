@@ -1,4 +1,4 @@
-package com.koval.santontank1994;
+package com.koval.santontank1994.util;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;

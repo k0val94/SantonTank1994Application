@@ -2,7 +2,6 @@ package com.koval.santontank1994.entity;
 
 import java.awt.Rectangle;
 
-import com.koval.santontank1994.Tank;
 import lombok.Getter;
 import lombok.Setter;
 

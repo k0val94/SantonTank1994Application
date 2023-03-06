@@ -1,11 +1,11 @@
-package com.koval.santontank1994;
+package com.koval.santontank1994.input;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 
+import com.koval.santontank1994.util.SoundPlayer;
+import com.koval.santontank1994.entity.Tank;
 import lombok.Getter;
 
 @Getter
@@ -33,6 +33,7 @@ public class InputHandler extends KeyAdapter {
         return keys[keyCode];
     }
 
+    @Override
     public void keyPressed(KeyEvent e) {
         keys[e.getKeyCode()] = true;
         if (e.getKeyCode() == tank.getUpKey()) {
@@ -52,6 +53,7 @@ public class InputHandler extends KeyAdapter {
         }
     }
 
+    @Override
     public void keyReleased(KeyEvent e) {
         keys[e.getKeyCode()] = false;
         if (e.getKeyCode() == tank.getUpKey() || e.getKeyCode() == tank.getDownKey()) {
@@ -61,7 +63,4 @@ public class InputHandler extends KeyAdapter {
         }
     }
 
-    public void keyTyped(KeyEvent e) {
-
-    }
 }
